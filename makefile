@@ -94,6 +94,7 @@ $(USR_OBJ)/%.o: $(USR_SRC)/%.c  $(OS_SRC)/*.h $(wildcard $(USR_SRC)/*.h)
 # in a "magic" location in this directory
 
 isodir/boot/grub/grub.cfg::
+	mkdir -p $(@D)
 	m4 -DMYOS_NAME=$(MYOS_NAME) -DTIMESTAMP="`date`" grub.cfg.m4 > $@
 
 
@@ -109,6 +110,7 @@ isodir/boot/grub/grub.cfg::
 # You can change the name of the bin file to mach the name of the iso file, 
 # just be sure to update grub.cfg also if you do.
 isodir/boot/theos.bin: $(all_objs)
+	mkdir -p $(@D)
 	$(elfCC) -T linker.ld -o $@ -ffreestanding -O2 -nostdlib $^ -lgcc
 
 
