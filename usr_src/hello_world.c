@@ -21,6 +21,7 @@
  * Add a function named "kernel_main", and rename the kernel_main
  * below.  (If you don't rename kernel_main below, you will get
  * "duplicate symbol" errors.)
+ *
  ****************************************************************/
 
 
@@ -54,6 +55,8 @@ void kernel_main() {
 
 // This is the code that is run when running the "os" from the command line
 #if DEBUG
+
+void kernel_main();
 int main() {
   kernel_main();
 
