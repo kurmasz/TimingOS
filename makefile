@@ -42,11 +42,15 @@ all: timingos.iso timingos.debug
 # Compile "core" OS
 #
 #############################################################################
-# Headers shouldn't change much.  If they do, then just re-build all the 
-# .o files
+
+# Headers shouldn't change much.  If they do, then just 
+# re-build all the .o files
 $(OS_OBJ)/%.o: $(OS_SRC)/%.c $(OS_SRC)/*.h
 	mkdir -p $(@D)
 	$(elfCC) $(CFLAGS) -c $< -o $@ -O2
+        # generate the assembly file, in case we want to look at it later.
+	$(elfCC) $(CFLAGS) -S $< -o $(@:.o=.s) -O2 
+
 
 $(OS_OBJ)/boot.o: $(OS_SRC)/boot.s
 	mkdir -p $(@D)
@@ -63,6 +67,20 @@ $(OS_OBJ)/boot.o: $(OS_SRC)/boot.s
 $(USR_OBJ)/%.o: $(USR_SRC)/%.c  $(OS_SRC)/*.h $(wildcard $(USR_SRC)/*.h)
 	mkdir -p $(@D)
 	$(elfCC) $(CFLAGS) -c $< -o $@ -I $(OS_SRC)
+        # generate the assembly file, in case we want to look at it later.
+	$(elfCC) $(CFLAGS) -S $< -o $(@:.o=.s) -I $(OS_SRC) 
+
+
+############################################################################
+#
+# Generate assembly code
+#
+# (Not necessary for building the OS, but potentially helpful for debugging
+#  or just to better understand how everyting works.)
+#
+###########################################################################
+
+
 
 
 
