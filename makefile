@@ -37,13 +37,6 @@ all_objs = $(os_objs) $(OS_OBJ)/boot.o $(usr_objs)
 all: timingos.iso timingos.debug
 
 
-# This rule builds the obj directory. That needs to be done only when
-# cloning the repository, so I don't make this a depencency of each 
-# compilation.
-directories: 
-	mkdir -p $(OS_OBJ)
-	mkdir -p $(USR_OBJ)
-
 #############################################################################
 #
 # Compile "core" OS
@@ -52,9 +45,11 @@ directories:
 # Headers shouldn't change much.  If they do, then just re-build all the 
 # .o files
 $(OS_OBJ)/%.o: $(OS_SRC)/%.c $(OS_SRC)/*.h
+	mkdir -p $(@D)
 	$(elfCC) $(CFLAGS) -c $< -o $@ -O2
 
 $(OS_OBJ)/boot.o: $(OS_SRC)/boot.s
+	mkdir -p $(@D)
 	$(elfCC) $(CFLAGS) -c $< -o $@ -O2
 
 
@@ -66,6 +61,7 @@ $(OS_OBJ)/boot.o: $(OS_SRC)/boot.s
 # Headers shouldn't change much.  If they do, then just re-build all the 
 # .o files
 $(USR_OBJ)/%.o: $(USR_SRC)/%.c  $(OS_SRC)/*.h $(wildcard $(USR_SRC)/*.h)
+	mkdir -p $(@D)
 	$(elfCC) $(CFLAGS) -c $< -o $@ -I $(OS_SRC)
 
 
