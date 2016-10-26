@@ -1,3 +1,10 @@
+#
+# NOTE:  Because this is a .S file (as opposed to a .s file), gcc will
+# run the pre-processor on it.  I use this feature to specify the name of the
+# kernel entry point from the makefile (i.e., -DKERNEL_MAIN=my_main).  Take care
+# that comments aren't written so that they end up looking like pre-processor
+# directives.
+
 # Declare constants for the multiboot header.
 .set ALIGN,    1<<0             # align loaded modules on page boundaries
 .set MEMINFO,  1<<1             # provide memory map
@@ -59,7 +66,8 @@ _start:
 	# constructors and exceptions will require runtime support to work as well.
 
 	# Enter the high-level kernel.
-	call kernel_main
+	# KERNEL_MAIN is intended to be substituted by the pre-processor
+	call KERNEL_MAIN
 
 	# If the system has nothing more to do, put the computer into an infinite
 	# loop. To do that:

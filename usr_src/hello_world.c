@@ -17,15 +17,15 @@
  *       TimingOS.  (Look at os_src / *.h).  You don't have 
  *       any standard C libraries (no printf, no malloc, etc.)
  *
- * To write your own code, create a new file in this directory,
- * Add a function named "kernel_main", and rename the kernel_main
- * below.  (If you don't rename kernel_main below, you will get
- * "duplicate symbol" errors.)
+ * To write your own code, create a new file in this directory, 
+ * and edit makefile.local to it sets KERNEL_MAIN to be the name 
+ * of the entry point for your kernel.  (Be sure to edit 
+ * makefile.local *not* makefile.local.sample.)
  *
  ****************************************************************/
 
 
-void kernel_main() {
+void kernel_main_hello_world() {
   randomize(0);
   
   /* Initialize terminal interface.  This function must always be

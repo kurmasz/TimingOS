@@ -12,7 +12,12 @@
 #
 ###############################################################################
 
-MYOS_NAME = "My Test OS"
+# makefile.local should contain the definition for KERNEL_MAIN
+# Begin by loading makefile.local.sample. If makefile.local exists, 
+# it will overwrite the values set in makefile.local.sample.  If it doesn't
+# exist, nothing will happen.
+include makefile.local.sample
+-include makefile.local
 
 OS_SRC  = os_src
 USR_SRC = usr_src
@@ -36,6 +41,21 @@ all_objs = $(os_objs) $(OS_OBJ)/boot.o $(usr_objs)
 # timingos.debug is an executable program designed to be run for debugging
 all: timingos.iso timingos.debug
 
+#
+# Make the obj directories, if they don't already exist.
+#
+$(OS_OBJ):
+	mkdir -p $@
+
+$(USR_OBJ):
+	mkdir -p $@
+
+#
+# create makefile.local if it doesn't already exist
+#
+makefile.local:
+	cp makefile.local.sample $@
+
 
 #############################################################################
 #
@@ -45,16 +65,18 @@ all: timingos.iso timingos.debug
 
 # Headers shouldn't change much.  If they do, then just 
 # re-build all the .o files
-$(OS_OBJ)/%.o: $(OS_SRC)/%.c $(OS_SRC)/*.h
-	mkdir -p $(@D)
+$(OS_OBJ)/%.o: $(OS_SRC)/%.c $(OS_SRC)/*.h | $(OS_OBJ)
 	$(elfCC) $(CFLAGS) -c $< -o $@ -O2
         # generate the assembly file, in case we want to look at it later.
 	$(elfCC) $(CFLAGS) -S $< -o $(@:.o=.s) -O2 
 
 
-$(OS_OBJ)/boot.o: $(OS_SRC)/boot.s
+# By naming the file boot.S (instead of boot.s), gcc will run the 
+# pre-processor and substitute KERNEL_MAIN with the user-chosen
+# kernel entry point.
+$(OS_OBJ)/boot.o: $(OS_SRC)/boot.S | $(OS_OBJ) makefile.local
 	mkdir -p $(@D)
-	$(elfCC) $(CFLAGS) -c $< -o $@ -O2
+	$(elfCC) $(CFLAGS) -DKERNEL_MAIN=$(KERNEL_MAIN) -c $< -o $@ -O2
 
 
 ############################################################################
@@ -64,24 +86,10 @@ $(OS_OBJ)/boot.o: $(OS_SRC)/boot.s
 ###########################################################################
 # Headers shouldn't change much.  If they do, then just re-build all the 
 # .o files
-$(USR_OBJ)/%.o: $(USR_SRC)/%.c  $(OS_SRC)/*.h $(wildcard $(USR_SRC)/*.h)
-	mkdir -p $(@D)
+$(USR_OBJ)/%.o: $(USR_SRC)/%.c $(OS_SRC)/*.h $(wildcard $(USR_SRC)/*.h) | $(USR_OBJ)
 	$(elfCC) $(CFLAGS) -c $< -o $@ -I $(OS_SRC)
         # generate the assembly file, in case we want to look at it later.
 	$(elfCC) $(CFLAGS) -S $< -o $(@:.o=.s) -I $(OS_SRC) 
-
-
-############################################################################
-#
-# Generate assembly code
-#
-# (Not necessary for building the OS, but potentially helpful for debugging
-#  or just to better understand how everyting works.)
-#
-###########################################################################
-
-
-
 
 
 ##########################################################################
@@ -103,11 +111,13 @@ $(USR_OBJ)/%.o: $(USR_SRC)/%.c  $(OS_SRC)/*.h $(wildcard $(USR_SRC)/*.h)
 # was correctly updated.)
 ########################################################################
 
-# isodir contains the new OS image.  We place the 
-# updated grub image (the one with the current timestamp)
-# in a "magic" location in this directory
+# isodir contains the new OS image.  We place the  updated grub image 
+# (the one with the current timestamp) in a "magic" location in this directory
+# This target is declared to be .PHONY so that it is rebuilt every time.
 
-isodir/boot/grub/grub.cfg::
+.PHONY: isodir/boot/grub/grub.cfg
+isodir/boot/grub/grub.cfg: | makefile.local
+	echo $(MYOS_NAME)
 	mkdir -p $(@D)
 	m4 -DMYOS_NAME=$(MYOS_NAME) -DTIMESTAMP="`date`" grub.cfg.m4 > $@
 

@@ -1,0 +1,7 @@
+#
+# Edit the line below to set KERNEL_MAIN equal to the name of the
+# function that is the entry point for your OS.
+#
+
+MYOS_NAME="Hello, World! OS"
+KERNEL_MAIN=kernel_main_hello_world
