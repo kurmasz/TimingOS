@@ -52,19 +52,3 @@ void kernel_main_hello_world() {
   terminal_write_string(&head, "This is another line in the head\n");
   terminal_write_string(&head, "Good bye.\n");
 }
-
-// This is the code that is run when running the "os" from the command line
-#if DEBUG
-
-void kernel_main();
-int main() {
-  kernel_main();
-
-  /* When run as a normal program, it is not possible to write
-   directly to the screen Calling terminal_dump dumps the print buffer
-   to the command-line terminal using printf.
-  */
-  terminal_dump();
-  return 0;
-}
-#endif
