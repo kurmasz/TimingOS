@@ -148,7 +148,7 @@ timingos.iso: isodir/boot/theos.bin isodir/boot/grub/grub.cfg
 # Create an executable that can be run locally for debugging (checking 
 # output, using valgrind, etc.)
 timingos.debug: $(os_sources) $(usr_sources) 
-	$(CC) -DDEBUG -g -std=c99 -o $@ $^ -I $(OS_SRC)
+	$(CC) -DDEBUG -g -std=c99 -DKERNEL_MAIN=$(KERNEL_MAIN) -o $@ $^ -I $(OS_SRC)
 
 
 #######################################################################
