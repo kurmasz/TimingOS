@@ -1,5 +1,6 @@
 #include "timingos.h"
 
+#if 0
 #define DEBUG_BUFFER_SIZE 1048576
 static char debug_buffer[DEBUG_BUFFER_SIZE];
 static int debug_buffer_index = 0;
@@ -85,3 +86,4 @@ unsigned long long debug_init() {
 }
 
 
+#endif

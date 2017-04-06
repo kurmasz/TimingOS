@@ -262,7 +262,7 @@ int myio(char output[], int base_reg,
    for (int i = 0; i < 10000; i++) {
      dummy = dummy*(dummy-1);
    }
-   debug_write_unsigned(dummy, " Dummy value");
+//   debug_write_unsigned(dummy, " Dummy value");
 
    // Wait for busy again.
    do {
