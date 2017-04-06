@@ -15,7 +15,7 @@ int main(int argc, char* argv[]) {
   // we don't want the reading to stop at the end of "lines".)
 
   bool found_it;
-
+  int count = 0;
   int i;
   do {
     found_it = true;
@@ -27,7 +27,8 @@ int main(int argc, char* argv[]) {
       }
       if (c != magic_string[i]) {
 	found_it = false;
-      } 	
+      } 
+      ++count;
     } // end for
   } while (!found_it);
 
