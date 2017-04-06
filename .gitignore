@@ -1,7 +1,8 @@
 *~
-#*
+\#*
 obj/
 isodir/
 timingos.debug
 timingos.iso
 makefile.local
+.nfs*
