@@ -67,16 +67,16 @@ debug_write_string(data);
 unsigned long long debug_init() {
 
   debug_buffer_index = DEBUG_BUFFER_SIZE - 15;
-  debug_write_string("XVWQ Debug End");
+  debug_write_string("XWVQ Debug End");
 
   // These are written one-by-one to make the string 'QVWX' unique 
   // in the memory dump.  If we hard-coded it as a string, it would 
   // likely appear in the instruction memory as well.
   debug_buffer[0] = 'Q';
-  debug_buffer[0] = 'V';
-  debug_buffer[0] = 'W';
-  debug_buffer[0] = 'X';
-  debug_buffer[0] = ' ';
+  debug_buffer[1] = 'V';
+  debug_buffer[2] = 'W';
+  debug_buffer[3] = 'X';
+  debug_buffer[4] = ' ';
 
   debug_buffer_index = 5;
   debug_write_string("Debug Start\n");

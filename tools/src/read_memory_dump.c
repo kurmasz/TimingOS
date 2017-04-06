@@ -13,9 +13,6 @@ int main(int argc, char* argv[]) {
   // buffer begins at a multiple of four.  This allows us to read data
   // in chunks of four bytes.  (Note, we don't use gets here becasue
   // we don't want the reading to stop at the end of "lines".)
-  char buffer4[MAGIC_STRING_LEN];
-
-
 
   bool found_it;
 
@@ -23,9 +20,14 @@ int main(int argc, char* argv[]) {
   do {
     found_it = true;
     for (i = 0; i < MAGIC_STRING_LEN; i++) {
-      if (getchar() != magic_string[i]) {
-	found_it = false;
+      int c = getchar();
+      if (c == EOF) {
+	printf("Debug section not found.");
+	return 1;
       }
+      if (c != magic_string[i]) {
+	found_it = false;
+      } 	
     } // end for
   } while (!found_it);
 
