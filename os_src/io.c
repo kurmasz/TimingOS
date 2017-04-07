@@ -400,7 +400,7 @@ int myio(char output[], int base_reg,
 
   char foo[1024] = "abcdefghigjlmnopqrstuvwxyz";
   unsigned* buffer = (unsigned*)foo;
-  if (myio(foo, PRIMARY, &head, &body) != 0) {
+  if (myio(foo, SECONDARY, &head, &body) != 0) {
   terminal_write_string(&body, "(");
   for (int i = 0; i < 128; i++) {
     terminal_write_unsigned(&body, i, " ");
