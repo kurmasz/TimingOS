@@ -6,11 +6,23 @@ void outb(int port, int data) {
   __asm__("out %%eax, %%dx" : : "a"(data), "d"(port));
 }
 
+/*
 int inb(int port) {
   int answer;
-  __asm__("in %%dx, %%eax\n" :"=a"(answer) : "d"(port) );
+  __asm__("inb %%dx, %%al\n" :"=a"(answer) : "d"(port) );
   return answer;
 }
+*/
+
+static __inline unsigned char
+inb (unsigned short int port)
+{
+  unsigned char _v;
+
+  __asm__ __volatile__ ("inb %w1,%0":"=a" (_v):"Nd" (port));
+  return _v;
+}
+
 
 void ins(uint16_t cmd, char buffer[]) {
 
@@ -201,7 +213,7 @@ int myio(char output[], int base_reg,
    output[0] = '!';
    terminal_write_string(body, "Let's try atapi!\n");
    int attempts = ATTEMPTS;
-   unsigned val;
+   unsigned char val;
    do {
      val = inb(base_reg + STATUS_REG) & 0xff;
      terminal_write_unsigned_hex(body, val, 
@@ -395,8 +407,8 @@ int myio(char output[], int base_reg,
  #endif
 
 
-   //char bar[1024];
-   //myio_atapi(bar, PRIMARY, &head, &body);
+   char bar[1024];
+   myio_atapi(bar, PRIMARY, &head, &body);
 
   char foo[1024] = "abcdefghigjlmnopqrstuvwxyz";
   unsigned* buffer = (unsigned*)foo;
